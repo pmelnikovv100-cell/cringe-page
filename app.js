@@ -339,16 +339,24 @@ const dodge = () => {
       ? real[(Math.random() * real.length) | 0]
       : real[real.length - 1];
   }
-  function playSpinSong() {
-    if (C.roulette.playSongWhileSpinning === false) return;
-    const url = pickSong();
-    if (!url) return;
-    clearInterval(fadeTimer);
-    if (spinAudio.src !== url) spinAudio.src = url;
-    spinAudio.currentTime = 0;
-    spinAudio.volume = 1;
-    spinAudio.play().catch(() => {});
-  }
+function playSpinSong() {
+  if (C.roulette.playSongWhileSpinning === false) return;
+
+  const url = pickSong();
+  if (!url) return;
+
+  // Гарантированно останавливаем предыдущий трек перед запуском нового
+  clearInterval(fadeTimer);
+  spinAudio.pause();
+  spinAudio.currentTime = 0;
+  spinAudio.src = "";
+
+  // Запускаем новый трек
+  spinAudio.src = url;
+  spinAudio.currentTime = 0;
+  spinAudio.volume = 1;
+  spinAudio.play().catch(() => {});
+}
 function stopSpinSong() {
   clearInterval(fadeTimer);
 
