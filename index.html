@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#7c00ff" />
+<title>С ДНЁМ РОЖДЕНИЯ!!!</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8E%82%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ruslan+Display&family=Russo+One&family=Neucha&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="stars" aria-hidden="true"></div>
+
+<!-- ============ ВСПЛЫВАЮЩИЙ БАННЕР ============ -->
+<div class="banner-back" id="bannerBack" role="dialog" aria-modal="true" aria-labelledby="bannerTitle" hidden>
+  <div class="banner" id="banner">
+    <button class="modal-x banner-x" id="bannerX" type="button" aria-label="Закрыть">✕</button>
+    <div class="banner-gif-wrap" id="bannerGifWrap" hidden>
+      <img class="banner-gif" id="bannerGif" alt="" />
+    </div>
+    <h3 class="banner-title" id="bannerTitle"></h3>
+    <p class="banner-text" id="bannerText"></p>
+    <div class="row banner-row">
+      <button class="btn" id="bannerBtn1" type="button"></button>
+      <button class="btn ghost" id="bannerBtn2" type="button"></button>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="logo-row">
+    <svg class="logo" viewBox="0 0 48 48" aria-label="Логотип: торт" role="img" fill="none">
+      <path d="M8 40h32M10 40V26c0-2 2-3 4-3h20c2 0 4 1 4 3v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M10 32c4 0 4-3 7-3s3 3 7 3 4-3 7-3 3 3 7 3" stroke="currentColor" stroke-width="2.5"/>
+      <path d="M24 23v-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M24 11c2 2.5 2 4 0 6-2-2-2-3.5 0-6Z" stroke="currentColor" stroke-width="2.5"/>
+    </svg>
+    <span class="logo-word">ВВЕДИТЕ ТЕКСТ™</span>
+  </div>
+
+  <h1 id="heroTitle" class="hero-title">С ДНЁМ РОЖДЕНИЯ</h1>
+  <div id="heroName" class="hero-name">ИМЯ</div>
+  <p id="heroSub" class="hero-sub"></p>
+
+  <div class="marquee"><div class="marquee-track"><span id="marqueeText"></span><span id="marqueeText2"></span></div></div>
+
+  <div class="progress" id="progress" role="status" aria-live="polite">
+    <span class="pill" data-step="1">1. Карточки <b>—</b></span>
+    <span class="pill" data-step="2">2. Рулетка <b>—</b></span>
+    <span class="pill" data-step="3">3. Фото <b>—</b></span>
+  </div>
+</header>
+
+<main>
+  <!-- ============ ИСПЫТАНИЕ 1 ============ -->
+  <section class="challenge" id="ch1">
+    <h2 class="ch-title"><span class="num">1</span><span id="c1title"></span></h2>
+    <p class="ch-text" id="c1instr"></p>
+    <div class="cards-grid" id="cardsGrid"></div>
+    <div class="row">
+      <button class="btn" id="checkCards">Проверить порядок</button>
+      <button class="btn ghost" id="shuffleCards">Перемешать заново</button>
+    </div>
+    <p class="status" id="c1status"></p>
+  </section>
+
+  <!-- ============ ИСПЫТАНИЕ 2 ============ -->
+  <section class="challenge locked" id="ch2">
+    <div class="lock-veil"><span>🔒 Сначала испытание №1</span></div>
+    <h2 class="ch-title"><span class="num">2</span><span id="c2title"></span></h2>
+    <p class="ch-text" id="c2instr"></p>
+
+    <div class="casino">
+      <div class="wheel-wrap">
+        <div class="pointer" aria-hidden="true"></div>
+        <div class="wheel-rotor" id="wheelRotor"><canvas id="wheel" width="520" height="520"></canvas></div>
+        <div class="wheel-hub" id="wheelHub">🎰</div>
+      </div>
+
+      <div class="casino-side">
+        <div class="tokens">
+          Жетоны: <b id="tokenCount">0</b>
+          <span class="tiny">1 жетон = <span id="recSecLabel">10</span> сек песни</span>
+        </div>
+
+        <button class="btn rec" id="recBtn">🎤 Записать <span id="recSecLabel2">10</span> сек песни</button>
+        <div class="rec-bar"><div class="rec-bar-fill" id="recFill"></div></div>
+        <p class="tiny" id="recStatus">Микрофон нужен для оплаты. Пой громко и не в такт.</p>
+
+        <button class="btn spin" id="spinBtn" disabled>КРУТИТЬ (−1 жетон)</button>
+        <p class="status" id="c2status"></p>
+
+        <div class="songs" id="songs"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ИСПЫТАНИЕ 3 ============ -->
+  <section class="challenge locked" id="ch3">
+    <div class="lock-veil"><span>🔒 Сначала испытание №2</span></div>
+    <h2 class="ch-title"><span class="num">3</span><span id="c3title"></span></h2>
+    <p class="ch-text" id="c3instr"></p>
+
+    <div class="photo-block">
+      <div class="photo-frame" id="photoFrame"><div class="photo-crop" id="photoCrop"></div></div>
+      <div class="photo-side">
+        <label class="tiny" for="guessInput">Твой ответ:</label>
+        <input id="guessInput" class="input" type="text" placeholder="Например: набережная в ..." autocomplete="off" />
+        <div class="row">
+          <button class="btn" id="guessBtn">Ответить</button>
+          <button class="btn ghost" id="hintBtn">Взять подсказку</button>
+        </div>
+        <ul class="hints" id="hintList"></ul>
+        <p class="status" id="c3status"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ФИНАЛ ============ -->
+  <section class="final locked" id="final">
+    <div class="lock-veil"><span>🔒 Пройди все три испытания</span></div>
+    <h2 class="final-h">ОТВЕТ НА ЗАГАДКУ</h2>
+    <p class="riddle-q" id="riddleQ"></p>
+    <div class="answer-box"><p id="riddleA"></p></div>
+    <p class="tiny center" id="riddleNote"></p>
+    <div class="row center">
+      <button class="btn buy" id="buyBtn">Купить транскрипцию</button>
+      <button class="btn ghost" id="replaySongs">Прослушать мои песни</button>
+    </div>
+    <p class="tiny center">Цена: <span id="priceLabel"></span></p>
+  </section>
+</main>
+
+<footer class="foot">Сделано вручную, с любовью и без вкуса. © навсегда</footer>
+
+<!-- ============ МОДАЛКА ТРАНСКРИПЦИИ ============ -->
+<div class="modal-back" id="modalBack" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-x" id="modalClose" aria-label="Закрыть">✕</button>
+    <h3 id="modalTitle">Оплата: <span id="modalPrice"></span></h3>
+    <p class="tiny" id="uploadHint"></p>
+
+    <label class="drop" id="drop">
+      <input type="file" id="fileInput" accept="image/*" multiple hidden />
+      <span>Перетащи фото сюда или нажми, чтобы выбрать</span>
+      <b id="photoCounter">0 / 10</b>
+    </label>
+
+    <div class="thumbs" id="thumbs"></div>
+
+    <div class="row">
+      <button class="btn buy" id="payBtn" disabled>Оплатить и получить транскрипцию</button>
+      <button class="btn ghost" id="clearPhotos">Очистить</button>
+    </div>
+
+    <div class="transcript" id="transcript" hidden>
+      <pre id="transcriptText"></pre>
+      <div class="songs" id="songs2"></div>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
