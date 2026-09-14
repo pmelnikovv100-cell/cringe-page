@@ -350,21 +350,35 @@ const dodge = () => {
     spinAudio.play().catch(() => {});
   }
   function stopSpinSong() {
-    clearInterval(fadeTimer);
-    const ms = C.roulette.songFadeOutMs == null ? 700 : C.roulette.songFadeOutMs;
-    if (spinAudio.paused) return;
-    if (ms <= 0) { spinAudio.pause(); return; }
-    const step = 1 / Math.max(1, Math.round(ms / 50));
-    fadeTimer = setInterval(() => {
-      spinAudio.volume = Math.max(0, spinAudio.volume - step);
-      if (spinAudio.volume <= 0.01) {
-        clearInterval(fadeTimer);
-        spinAudio.pause();
-        spinAudio.currentTime = 0;
-        spinAudio.volume = 1;
-      }
-    }, 50);
+  clearInterval(fadeTimer);
+
+  const ms = C.roulette.songFadeOutMs == null ? 700 : C.roulette.songFadeOutMs;
+
+  // Если аудио даже не загружено — ничего не делаем
+  if (!spinAudio.src) return;
+
+  if (ms <= 0) {
+    spinAudio.pause();
+    spinAudio.currentTime = 0;
+    spinAudio.src = "";
+    spinAudio.volume = 1;
+    return;
   }
+
+  const startVol = spinAudio.volume || 1;
+  const step = startVol / Math.max(1, Math.round(ms / 50));
+
+  fadeTimer = setInterval(() => {
+    spinAudio.volume = Math.max(0, spinAudio.volume - step);
+    if (spinAudio.volume <= 0.01) {
+      clearInterval(fadeTimer);
+      spinAudio.pause();
+      spinAudio.currentTime = 0;
+      spinAudio.src = "";
+      spinAudio.volume = startVol;
+    }
+  }, 50);
+}
 
   const recBtn = $("recBtn"), recFill = $("recFill"), recStatus = $("recStatus");
   let recBusy = false;
