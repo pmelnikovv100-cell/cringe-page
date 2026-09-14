@@ -349,35 +349,17 @@ const dodge = () => {
     spinAudio.volume = 1;
     spinAudio.play().catch(() => {});
   }
-  function stopSpinSong() {
+function stopSpinSong() {
   clearInterval(fadeTimer);
 
-  const ms = C.roulette.songFadeOutMs == null ? 700 : C.roulette.songFadeOutMs;
-
-  // Если аудио даже не загружено — ничего не делаем
+  // Если ничего не загружено — выходим
   if (!spinAudio.src) return;
 
-  if (ms <= 0) {
-    spinAudio.pause();
-    spinAudio.currentTime = 0;
-    spinAudio.src = "";
-    spinAudio.volume = 1;
-    return;
-  }
-
-  const startVol = spinAudio.volume || 1;
-  const step = startVol / Math.max(1, Math.round(ms / 50));
-
-  fadeTimer = setInterval(() => {
-    spinAudio.volume = Math.max(0, spinAudio.volume - step);
-    if (spinAudio.volume <= 0.01) {
-      clearInterval(fadeTimer);
-      spinAudio.pause();
-      spinAudio.currentTime = 0;
-      spinAudio.src = "";
-      spinAudio.volume = startVol;
-    }
-  }, 50);
+  // Мгновенно и жёстко останавливаем воспроизведение
+  spinAudio.pause();
+  spinAudio.currentTime = 0;
+  spinAudio.src = "";      // обрываем источник
+  spinAudio.volume = 1;    // сбрасываем громкость на полную (на будущее)
 }
 
   const recBtn = $("recBtn"), recFill = $("recFill"), recStatus = $("recStatus");
