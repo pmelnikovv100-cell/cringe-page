@@ -371,6 +371,7 @@ const dodge = () => {
 
   async function recordPayment() {
     if (recBusy) return;
+    stopSpinSong();
     const secs = C.roulette.recordSeconds;
     recBusy = true; recBtn.disabled = true;
     try {
